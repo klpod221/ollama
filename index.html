@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama</title>
+</head>
+
+<body>
+    <h1>klpod221's AI chat bot</h1>
+
+    <div id="chat">
+        <p class="ai">Hi, I'm klpod221's AI chat bot. How can I help you today?</p>
+        <p class="user">I need help with something.</p>
+    </div>
+
+    <form id="chatForm">
+        <input type="text" id="userInput" placeholder="Type a message...">
+        <button type="submit">Send</button>
+        <span id="status"></span>
+    </form>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const getAnswer = async (question) => {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+                return data;
+            };
+
+            $('#chatForm').submit(async function (e) {
+                e.preventDefault();
+                const userInput = $('#userInput').val();
+                $('#chat').append(`<p class="user">${userInput}</p>`);
+                $('#userInput').val('');
+                $('#status').text('Thinking...');
+
+                const { answer } = await getAnswer(userInput);
+                $('#chat').append(`<p class="ai">${answer}</p>`);
+                $('#status').text('');
+            });
+        });
+    </script>
+</body>
+
+</html>
