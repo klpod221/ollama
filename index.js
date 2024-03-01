@@ -17,9 +17,16 @@ app.get("/", async (req, res) => {
 app.post("/ask", async (req, res) => {
   const question = req.body.question;
 
-  const answer = await ollama.call(question);
+  const stream = await ollama.stream(question);
 
-  return res.json({ answer });
+  const chunks = [];
+  for await (const chunk of stream) {
+    res.write(chunk);
+    console.log(chunk);
+    chunks.push(chunk);
+  }
+
+  res.end();
 });
 
 app.listen(3000, () => {

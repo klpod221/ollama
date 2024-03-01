@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@langchain/community": "^0.0.34",
+    "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "langchain": "^0.1.24"
   }

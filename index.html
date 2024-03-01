@@ -5,14 +5,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ollama</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #chat {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            width: 400px;
+            min-height: 400px;
+            overflow-y: auto;
+        }
+        
+        #chat p {
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+            white-space: pre-wrap;
+        }
+
+        #chat p.ai {
+            align-self: flex-start;
+            background-color: #f4f4f4;
+        }
+
+        #chat p.user {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        #chatForm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #chatForm input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #chatForm button {
+            padding: 10px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #chatForm button:hover {
+            background-color: #0056b3;
+        }
+
+        #status {
+            margin-left: 10px;
+        }
+
+        #status:empty {
+            display: none;
+        }
+
+        #status:after {
+            content: '...';
+            animation: dots 1s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+
+            0%,
+            20% {
+                content: '...';
+            }
+
+            40% {
+                content: '';
+            }
+        }
+    </style>
 </head>
 
 <body>
     <h1>klpod221's AI chat bot</h1>
 
     <div id="chat">
-        <p class="ai">Hi, I'm klpod221's AI chat bot. How can I help you today?</p>
-        <p class="user">I need help with something.</p>
     </div>
 
     <form id="chatForm">
@@ -38,6 +138,11 @@
                 return data;
             };
 
+            const scrollChat = () => {
+                const chat = document.getElementById('chat');
+                chat.scrollTop = chat.scrollHeight;
+            };
+
             $('#chatForm').submit(async function (e) {
                 e.preventDefault();
                 const userInput = $('#userInput').val();
@@ -45,9 +150,11 @@
                 $('#userInput').val('');
                 $('#status').text('Thinking...');
 
+                scrollChat();
                 const { answer } = await getAnswer(userInput);
                 $('#chat').append(`<p class="ai">${answer}</p>`);
                 $('#status').text('');
+                scrollChat();
             });
         });
     </script>
